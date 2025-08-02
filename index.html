@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>V.I.B.E. DAW - Full Interface</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>🎚️ V.I.B.E. Digital Audio Workstation</h1>
+  </header>
+
+  <!-- V.I.B.E. Orb and Morph -->
+  <section id="vibe-section">
+    <h3>V.I.B.E. Assistant</h3>
+    <div id="vibeOrb" class="orb">🎧</div>
+    <select id="morphSelect" onchange="morph()">
+      <option value="default">Floating Orb</option>
+      <option value="dancer">Dancer</option>
+      <option value="notes">Music Notes</option>
+      <option value="mic">Microphone</option>
+      <option value="grammy">Grammy Trophy</option>
+      <option value="face">Face Expression</option>
+    </select>
+  </section>
+
+  <!-- Mood Meter -->
+  <section id="mood-meter">
+    <h3>Current Mood</h3>
+    <div id="moodStatus">😐 Neutral</div>
+  </section>
+
+  <!-- Mixer Panel -->
+  <section id="mixer">
+    <h3>Track Mixer</h3>
+    <div class="mixer-track">🎚️ Track 1 <input type="range" /></div>
+    <div class="mixer-track">🎚️ Track 2 <input type="range" /></div>
+    <div class="mixer-track">🎚️ Track 3 <input type="range" /></div>
+  </section>
+
+  <!-- Smart Monitor -->
+  <section id="smart-monitor">
+    <h3>Smart Monitor Panel</h3>
+    <input type="text" id="youtubeUrl" placeholder="Paste YouTube URL" />
+    <button onclick="loadYouTube()">Load Video</button>
+    <iframe id="youtubeFrame" width="320" height="180" allowfullscreen></iframe>
+    <br />
+    <button onclick="startVideoCall()">Start Video</button>
+    <video id="localVideo" autoplay muted></video>
+    <button onclick="startScreenShare()">Share Screen</button>
+    <video id="screenVideo" autoplay muted></video>
+  </section>
+
+  <!-- Waveform and Transport -->
+  <section id="transport">
+    <h3>Transport Controls</h3>
+    <canvas id="waveform" width="600" height="100"></canvas>
+    <div>
+      <button onclick="play()">▶️ Play</button>
+      <button onclick="pause()">⏸️ Pause</button>
+      <button onclick="stop()">⏹️ Stop</button>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
