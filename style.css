@@ -1,23 +1,28 @@
+/* === GLOBAL STYLES === */
 body {
-  background-color: #111;
+  background-color: #0e0e0e;
   color: #fff;
   font-family: 'Segoe UI', sans-serif;
   margin: 0;
   padding: 20px;
 }
+
 header {
   text-align: center;
   padding: 10px;
   border-bottom: 2px solid #333;
 }
+
 section {
   background-color: #1a1a1a;
   border-radius: 10px;
   padding: 20px;
   margin: 20px auto;
-  max-width: 900px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+  max-width: 95%;
+  box-shadow: 0 0 20px rgba(0,0,0,0.6);
 }
+
+/* === ORB === */
 .orb {
   width: 100px;
   height: 100px;
@@ -34,6 +39,8 @@ section {
   50% { transform: scale(1.15); opacity: 1; }
   100% { transform: scale(1); opacity: 0.7; }
 }
+
+/* === DROPDOWN SELECT === */
 select {
   display: block;
   margin: 10px auto;
@@ -43,20 +50,69 @@ select {
   border: none;
   border-radius: 5px;
 }
+
+/* === MOOD METER === */
 #moodStatus {
   font-size: 1.5em;
   text-align: center;
   padding: 10px;
 }
+
+/* === ADVANCED MIXER PANEL === */
+#mixer {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 15px;
+  overflow-x: auto;
+}
+
 .mixer-track {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  background: #2a2a2a;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+}
+
+.mixer-track h4 {
   margin-bottom: 10px;
 }
-.mixer-track input[type="range"] {
-  width: 70%;
+
+.fader {
+  appearance: none;
+  width: 8px;
+  height: 100px;
+  background: linear-gradient(to top, #555, #aaa);
+  border-radius: 5px;
+  writing-mode: bt-lr; /* vertical slider */
+  transform: rotate(270deg);
+  margin: 10px auto;
 }
+
+.knob {
+  width: 30px;
+  height: 30px;
+  margin: 10px auto;
+  background: radial-gradient(circle at 30% 30%, #888, #111);
+  border-radius: 50%;
+  box-shadow: inset -2px -2px 5px rgba(0,0,0,0.6), inset 2px 2px 5px rgba(255,255,255,0.2);
+  cursor: pointer;
+}
+
+button.track-btn {
+  background-color: #00f2ff;
+  color: #000;
+  border: none;
+  padding: 5px 8px;
+  border-radius: 5px;
+  margin-top: 5px;
+  cursor: pointer;
+}
+button.track-btn:hover {
+  background-color: #00cce0;
+}
+
+/* === SMART MONITOR === */
 #smart-monitor input[type="text"] {
   width: 80%;
   padding: 5px;
@@ -67,6 +123,15 @@ select {
   margin-top: 10px;
   max-width: 100%;
 }
+
+/* === TRANSPORT === */
+canvas#waveform {
+  background-color: #222;
+  display: block;
+  margin: 10px auto;
+  border-radius: 5px;
+}
+
 button {
   background-color: #00f2ff;
   border: none;
@@ -78,10 +143,4 @@ button {
 }
 button:hover {
   background-color: #00cce0;
-}
-canvas#waveform {
-  background-color: #222;
-  display: block;
-  margin: 10px auto;
-  border-radius: 5px;
 }
