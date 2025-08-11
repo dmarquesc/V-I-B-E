@@ -2,314 +2,200 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>V.I.B.E. DAW - Full Interface</title>
+  <title>V.I.B.E. DAW</title>
   <link rel="stylesheet" href="style.css" />
-
-  <!-- Face API + app modules -->
+  <!-- keep your scripts deferred; JS comes later -->
   <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
   <script defer src="vibe.js"></script>
   <script defer src="moodMeter.js"></script>
   <script defer src="audioEngine.js"></script>
   <script defer src="smartMonitor.js"></script>
   <script defer src="sessionManager.js"></script>
-
-  <!-- 🔥 Advanced Mixer Logic -->
   <script defer src="mixer.js"></script>
 </head>
 <body>
-  <header>
-    <h1>🎚️ V.I.B.E. Digital Audio Workstation</h1>
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="brand">V.I.B.E</div>
+    <div class="transport-bar">
+      <button class="tbtn">⏮</button>
+      <button class="tbtn">▶︎</button>
+      <button class="tbtn">⏸</button>
+      <div class="scrub"></div>
+      <div class="time">1:34 / 4:00</div>
+    </div>
+    <div class="routing">WEB AUDIO ROUTING</div>
   </header>
 
-  <!-- 🔹 Top Panel: VIBE + Smart Monitor -->
-  <div class="row">
-    <section id="vibe-section">
-      <h3>V.I.B.E. Assistant</h3>
-      <div id="vibeOrb" class="orb">🎧</div>
-      <select id="morphSelect" onchange="morph()">
-        <option value="default">Floating Orb</option>
-        <option value="dancer">Dancer</option>
-        <option value="notes">Music Notes</option>
-        <option value="mic">Microphone</option>
-        <option value="grammy">Grammy Trophy</option>
-        <option value="face">Face Expression</option>
-      </select>
+  <!-- ===== Single-screen dashboard (no rows, no extra wrappers) ===== -->
+  <main class="desk">
+    <!-- Left -->
+    <section id="vibe-section" class="panel">
+      <h3 class="panel-title">V.I.B.E.</h3>
+      <div class="orb">😊</div>
+      <div class="vibe-note">V.I.B.E. is in default orb mode</div>
+
+      <div class="subpanel">
+        <h4>Lyrics Generator</h4>
+        <select id="lyricsStyle">
+          <option>Jodeci</option>
+          <option>H-Town</option>
+          <option>Boyz II Men</option>
+          <option>Twista (rap)</option>
+        </select>
+        <button class="primary">Generate Lyrics</button>
+        <div class="lyrics-out" id="lyricsOut">
+          I’m down on my knees, beggin’ you please, come back baby~
+        </div>
+      </div>
+
+      <div class="subpanel">
+        <div class="btn-row">
+          <button class="ghost">SAVE SESSION</button>
+          <button class="ghost">LOAD SESSION</button>
+        </div>
+      </div>
     </section>
 
-    <section id="smart-monitor">
-      <h3>Smart Monitor Panel</h3>
+    <!-- Center -->
+    <section id="center-panel" class="panel">
+      <h3 class="panel-title">TALK TO V.I.B.E.</h3>
+      <div class="talkbox">
+        I’m down on my knees, beggin’ you please; come back baby~
+      </div>
+      <div class="btn-row">
+        <button class="ghost">SAVE SESSION</button>
+        <button class="ghost">LOAD SESSION</button>
+      </div>
+      <section id="mood-meter" class="panel slim">
+        <h3 class="panel-title">MOOD METER</h3>
+        <div id="moodStatus" class="mood-face">🙂</div>
+      </section>
+    </section>
+
+    <!-- Right -->
+    <section id="smart-monitor" class="panel">
+      <h3 class="panel-title">SMART MONITOR</h3>
+      <div class="monitor-frame">
+        <img src="https://images.unsplash.com/photo-1607082349566-187342175e2f?q=80&w=800&auto=format&fit=crop" alt="guest" />
+      </div>
+
       <input type="text" id="youtubeUrl" placeholder="Paste YouTube URL" />
-      <button onclick="loadYouTube()">Load Video</button>
-      <iframe id="youtubeFrame" width="320" height="180" allowfullscreen></iframe>
-      <br />
-      <button onclick="startVideoCall()">Start Video</button>
-      <video id="localVideo" autoplay muted></video>
-      <button onclick="startScreenShare()">Share Screen</button>
-      <video id="screenVideo" autoplay muted></video>
+      <div class="btn-row">
+        <button class="primary" onclick="loadYouTube()">Load Video</button>
+        <button class="ghost"   onclick="startVideoCall()">Start Video</button>
+        <button class="ghost"   onclick="startScreenShare()">Share Screen</button>
+      </div>
+
+      <iframe id="youtubeFrame" allowfullscreen></iframe>
+      <video id="localVideo" autoplay muted playsinline></video>
+      <video id="screenVideo" autoplay muted playsinline></video>
     </section>
-  </div>
 
-  <!-- 🔹 Middle Panel: 8-Track Pro Mixer (SVG-ready) -->
-  <section id="mixer" class="mixer-panel">
-    <h3>🎛 Mixer Panel</h3>
-
-    <div class="mixer-tracks">
-
-      <!-- ===== Track TEMPLATE =====
-           Duplicate this block and change IDs/labels for 8+ tracks
-           Required children (per track):
-           - .track-bg (optional image/svg)
-           - .insert-btn (svg)
-           - .knob.send | .knob.gain | .knob.pan (svg)
-           - .btn.solo, .btn.mute (svg-enabled)
-           - .meter > .meter-fill (animated level)
-           - .fader > input[type=range] (vertical)
-           - .db-display (text)
-           - .track-label (editable)
-      -->
-
-      <!-- Track 1 -->
-      <div class="track" id="track-1">
-        <img src="assets/svg/track-bg.svg" alt="" class="track-bg" />
-
-        <div class="top-row">
-          <img src="assets/svg/insert-button.svg" class="insert-btn" alt="Insert" />
-          <div class="led" id="led-1"></div>
+    <!-- Bottom: full-width mixer -->
+    <section id="mixer" class="mixer-panel panel">
+      <h3 class="panel-title">MIXER</h3>
+      <div class="mixer-tracks">
+        <!-- 8 tracks -->
+        <!-- Track template repeated 8 times -->
+        <!-- Track 1 -->
+        <div class="track" id="track-1">
+          <img class="track-bg" src="assets/svg/track-bg.svg" alt="">
+          <div class="top-row">
+            <img src="assets/svg/insert-button.svg" class="insert-btn" alt="Insert">
+            <div class="led" id="led-1"></div>
+          </div>
+          <div class="knob-row">
+            <img src="assets/svg/knob-send.svg" class="knob send" alt="Send">
+            <img src="assets/svg/knob-gain.svg" class="knob gain" alt="Gain">
+            <img src="assets/svg/knob-pan.svg"  class="knob pan"  alt="Pan">
+          </div>
+          <div class="button-row">
+            <button class="btn solo" id="solo-1" aria-pressed="false">S</button>
+            <button class="btn mute" id="mute-1" aria-pressed="false">M</button>
+            <img src="assets/svg/button-headphone.svg" class="btn monitor" alt="Monitor">
+          </div>
+          <div class="meter-wrap">
+            <div class="meter" id="meter-1"><div class="meter-fill"></div></div>
+            <div class="db-display" id="db-1">0 dB</div>
+          </div>
+          <div class="fader">
+            <img src="assets/svg/fader-track.svg" class="fader-track" alt="" />
+            <input type="range" class="fader-input" id="fader-1" orient="vertical" min="0" max="100" value="70" />
+          </div>
+          <div class="track-label" contenteditable="true">Kick</div>
         </div>
 
-        <div class="knob-row">
-          <img src="assets/svg/knob-send.svg" class="knob send" alt="Send" />
-          <img src="assets/svg/knob-gain.svg" class="knob gain" alt="Gain" />
-          <img src="assets/svg/knob-pan.svg"  class="knob pan"  alt="Pan" />
+        <!-- Duplicate 7 more with labels -->
+        <div class="track" id="track-2"> <!-- Snare -->
+          <img class="track-bg" src="assets/svg/track-bg.svg" alt="">
+          <div class="top-row"><img src="assets/svg/insert-button.svg" class="insert-btn"><div class="led" id="led-2"></div></div>
+          <div class="knob-row"><img src="assets/svg/knob-send.svg" class="knob"><img src="assets/svg/knob-gain.svg" class="knob"><img src="assets/svg/knob-pan.svg" class="knob"></div>
+          <div class="button-row"><button class="btn solo" id="solo-2" aria-pressed="false">S</button><button class="btn mute" id="mute-2" aria-pressed="false">M</button><img src="assets/svg/button-headphone.svg" class="btn monitor"></div>
+          <div class="meter-wrap"><div class="meter" id="meter-2"><div class="meter-fill"></div></div><div class="db-display" id="db-2">0 dB</div></div>
+          <div class="fader"><img src="assets/svg/fader-track.svg" class="fader-track"><input type="range" class="fader-input" id="fader-2" min="0" max="100" value="60" orient="vertical"></div>
+          <div class="track-label" contenteditable="true">Snare</div>
         </div>
 
-        <div class="button-row">
-          <button class="btn solo" id="solo-1" aria-pressed="false">S</button>
-          <button class="btn mute" id="mute-1" aria-pressed="false">M</button>
-          <img src="assets/svg/button-headphone.svg" class="btn monitor" alt="Monitor" />
+        <div class="track" id="track-3"><img class="track-bg" src="assets/svg/track-bg.svg" alt="">
+          <div class="top-row"><img src="assets/svg/insert-button.svg" class="insert-btn"><div class="led" id="led-3"></div></div>
+          <div class="knob-row"><img src="assets/svg/knob-send.svg" class="knob"><img src="assets/svg/knob-gain.svg" class="knob"><img src="assets/svg/knob-pan.svg" class="knob"></div>
+          <div class="button-row"><button class="btn solo" id="solo-3" aria-pressed="false">S</button><button class="btn mute" id="mute-3" aria-pressed="false">M</button><img src="assets/svg/button-headphone.svg" class="btn monitor"></div>
+          <div class="meter-wrap"><div class="meter" id="meter-3"><div class="meter-fill"></div></div><div class="db-display" id="db-3">0 dB</div></div>
+          <div class="fader"><img src="assets/svg/fader-track.svg" class="fader-track"><input type="range" class="fader-input" id="fader-3" min="0" max="100" value="65" orient="vertical"></div>
+          <div class="track-label" contenteditable="true">Hat</div>
         </div>
 
-        <div class="meter-wrap">
-          <div class="meter" id="meter-1"><div class="meter-fill"></div></div>
-          <div class="db-display" id="db-1">0 dB</div>
+        <div class="track" id="track-4"><img class="track-bg" src="assets/svg/track-bg.svg" alt="">
+          <div class="top-row"><img src="assets/svg/insert-button.svg" class="insert-btn"><div class="led" id="led-4"></div></div>
+          <div class="knob-row"><img src="assets/svg/knob-send.svg" class="knob"><img src="assets/svg/knob-gain.svg" class="knob"><img src="assets/svg/knob-pan.svg" class="knob"></div>
+          <div class="button-row"><button class="btn solo" id="solo-4" aria-pressed="false">S</button><button class="btn mute" id="mute-4" aria-pressed="false">M</button><img src="assets/svg/button-headphone.svg" class="btn monitor"></div>
+          <div class="meter-wrap"><div class="meter" id="meter-4"><div class="meter-fill"></div></div><div class="db-display" id="db-4">0 dB</div></div>
+          <div class="fader"><img src="assets/svg/fader-track.svg" class="fader-track"><input type="range" class="fader-input" id="fader-4" min="0" max="100" value="55" orient="vertical"></div>
+          <div class="track-label" contenteditable="true">Bass</div>
         </div>
 
-        <div class="fader">
-          <img src="assets/svg/fader-track.svg" class="fader-track" alt="" />
-          <input type="range" class="fader-input" id="fader-1" orient="vertical" min="0" max="100" value="70" />
+        <div class="track" id="track-5"><img class="track-bg" src="assets/svg/track-bg.svg" alt="">
+          <div class="top-row"><img src="assets/svg/insert-button.svg" class="insert-btn"><div class="led" id="led-5"></div></div>
+          <div class="knob-row"><img src="assets/svg/knob-send.svg" class="knob"><img src="assets/svg/knob-gain.svg" class="knob"><img src="assets/svg/knob-pan.svg" class="knob"></div>
+          <div class="button-row"><button class="btn solo" id="solo-5" aria-pressed="false">S</button><button class="btn mute" id="mute-5" aria-pressed="false">M</button><img src="assets/svg/button-headphone.svg" class="btn monitor"></div>
+          <div class="meter-wrap"><div class="meter" id="meter-5"><div class="meter-fill"></div></div><div class="db-display" id="db-5">0 dB</div></div>
+          <div class="fader"><img src="assets/svg/fader-track.svg" class="fader-track"><input type="range" class="fader-input" id="fader-5" min="0" max="100" value="62" orient="vertical"></div>
+          <div class="track-label" contenteditable="true">Keys</div>
         </div>
 
-        <div class="track-label" contenteditable="true">Kick</div>
+        <div class="track" id="track-6"><img class="track-bg" src="assets/svg/track-bg.svg" alt="">
+          <div class="top-row"><img src="assets/svg/insert-button.svg" class="insert-btn"><div class="led" id="led-6"></div></div>
+          <div class="knob-row"><img src="assets/svg/knob-send.svg" class="knob"><img src="assets/svg/knob-gain.svg" class="knob"><img src="assets/svg/knob-pan.svg" class="knob"></div>
+          <div class="button-row"><button class="btn solo" id="solo-6" aria-pressed="false">S</button><button class="btn mute" id="mute-6" aria-pressed="false">M</button><img src="assets/svg/button-headphone.svg" class="btn monitor"></div>
+          <div class="meter-wrap"><div class="meter" id="meter-6"><div class="meter-fill"></div></div><div class="db-display" id="db-6">0 dB</div></div>
+          <div class="fader"><img src="assets/svg/fader-track.svg" class="fader-track"><input type="range" class="fader-input" id="fader-6" min="0" max="100" value="64" orient="vertical"></div>
+          <div class="track-label" contenteditable="true">Pad</div>
+        </div>
+
+        <div class="track" id="track-7"><img class="track-bg" src="assets/svg/track-bg.svg" alt="">
+          <div class="top-row"><img src="assets/svg/insert-button.svg" class="insert-btn"><div class="led" id="led-7"></div></div>
+          <div class="knob-row"><img src="assets/svg/knob-send.svg" class="knob"><img src="assets/svg/knob-gain.svg" class="knob"><img src="assets/svg/knob-pan.svg" class="knob"></div>
+          <div class="button-row"><button class="btn solo" id="solo-7" aria-pressed="false">S</button><button class="btn mute" id="mute-7" aria-pressed="false">M</button><img src="assets/svg/button-headphone.svg" class="btn monitor"></div>
+          <div class="meter-wrap"><div class="meter" id="meter-7"><div class="meter-fill"></div></div><div class="db-display" id="db-7">0 dB</div></div>
+          <div class="fader"><img src="assets/svg/fader-track.svg" class="fader-track"><input type="range" class="fader-input" id="fader-7" min="0" max="100" value="58" orient="vertical"></div>
+          <div class="track-label" contenteditable="true">Vocal</div>
+        </div>
+
+        <div class="track" id="track-8"><img class="track-bg" src="assets/svg/track-bg.svg" alt="">
+          <div class="top-row"><img src="assets/svg/insert-button.svg" class="insert-btn"><div class="led" id="led-8"></div></div>
+          <div class="knob-row"><img src="assets/svg/knob-send.svg" class="knob"><img src="assets/svg/knob-gain.svg" class="knob"><img src="assets/svg/knob-pan.svg" class="knob"></div>
+          <div class="button-row"><button class="btn solo" id="solo-8" aria-pressed="false">S</button><button class="btn mute" id="mute-8" aria-pressed="false">M</button><img src="assets/svg/button-headphone.svg" class="btn monitor"></div>
+          <div class="meter-wrap"><div class="meter" id="meter-8"><div class="meter-fill"></div></div><div class="db-display" id="db-8">0 dB</div></div>
+          <div class="fader"><img src="assets/svg/fader-track.svg" class="fader-track"><input type="range" class="fader-input" id="fader-8" min="0" max="100" value="52" orient="vertical"></div>
+          <div class="track-label" contenteditable="true">Guitar</div>
+        </div>
+
       </div>
-
-      <!-- Track 2 -->
-      <div class="track" id="track-2">
-        <img src="assets/svg/track-bg.svg" alt="" class="track-bg" />
-        <div class="top-row">
-          <img src="assets/svg/insert-button.svg" class="insert-btn" alt="Insert" />
-          <div class="led" id="led-2"></div>
-        </div>
-        <div class="knob-row">
-          <img src="assets/svg/knob-send.svg" class="knob send" alt="Send" />
-          <img src="assets/svg/knob-gain.svg" class="knob gain" alt="Gain" />
-          <img src="assets/svg/knob-pan.svg"  class="knob pan"  alt="Pan" />
-        </div>
-        <div class="button-row">
-          <button class="btn solo" id="solo-2" aria-pressed="false">S</button>
-          <button class="btn mute" id="mute-2" aria-pressed="false">M</button>
-          <img src="assets/svg/button-headphone.svg" class="btn monitor" alt="Monitor" />
-        </div>
-        <div class="meter-wrap">
-          <div class="meter" id="meter-2"><div class="meter-fill"></div></div>
-          <div class="db-display" id="db-2">0 dB</div>
-        </div>
-        <div class="fader">
-          <img src="assets/svg/fader-track.svg" class="fader-track" alt="" />
-          <input type="range" class="fader-input" id="fader-2" orient="vertical" min="0" max="100" value="60" />
-        </div>
-        <div class="track-label" contenteditable="true">Snare</div>
-      </div>
-
-      <!-- Track 3 -->
-      <div class="track" id="track-3">
-        <img src="assets/svg/track-bg.svg" alt="" class="track-bg" />
-        <div class="top-row">
-          <img src="assets/svg/insert-button.svg" class="insert-btn" alt="Insert" />
-          <div class="led" id="led-3"></div>
-        </div>
-        <div class="knob-row">
-          <img src="assets/svg/knob-send.svg" class="knob send" alt="Send" />
-          <img src="assets/svg/knob-gain.svg" class="knob gain" alt="Gain" />
-          <img src="assets/svg/knob-pan.svg"  class="knob pan"  alt="Pan" />
-        </div>
-        <div class="button-row">
-          <button class="btn solo" id="solo-3" aria-pressed="false">S</button>
-          <button class="btn mute" id="mute-3" aria-pressed="false">M</button>
-          <img src="assets/svg/button-headphone.svg" class="btn monitor" alt="Monitor" />
-        </div>
-        <div class="meter-wrap">
-          <div class="meter" id="meter-3"><div class="meter-fill"></div></div>
-          <div class="db-display" id="db-3">0 dB</div>
-        </div>
-        <div class="fader">
-          <img src="assets/svg/fader-track.svg" class="fader-track" alt="" />
-          <input type="range" class="fader-input" id="fader-3" orient="vertical" min="0" max="100" value="65" />
-        </div>
-        <div class="track-label" contenteditable="true">Hat</div>
-      </div>
-
-      <!-- Track 4 -->
-      <div class="track" id="track-4">
-        <img src="assets/svg/track-bg.svg" alt="" class="track-bg" />
-        <div class="top-row">
-          <img src="assets/svg/insert-button.svg" class="insert-btn" alt="Insert" />
-          <div class="led" id="led-4"></div>
-        </div>
-        <div class="knob-row">
-          <img src="assets/svg/knob-send.svg" class="knob send" alt="Send" />
-          <img src="assets/svg/knob-gain.svg" class="knob gain" alt="Gain" />
-          <img src="assets/svg/knob-pan.svg"  class="knob pan"  alt="Pan" />
-        </div>
-        <div class="button-row">
-          <button class="btn solo" id="solo-4" aria-pressed="false">S</button>
-          <button class="btn mute" id="mute-4" aria-pressed="false">M</button>
-          <img src="assets/svg/button-headphone.svg" class="btn monitor" alt="Monitor" />
-        </div>
-        <div class="meter-wrap">
-          <div class="meter" id="meter-4"><div class="meter-fill"></div></div>
-          <div class="db-display" id="db-4">0 dB</div>
-        </div>
-        <div class="fader">
-          <img src="assets/svg/fader-track.svg" class="fader-track" alt="" />
-          <input type="range" class="fader-input" id="fader-4" orient="vertical" min="0" max="100" value="55" />
-        </div>
-        <div class="track-label" contenteditable="true">Bass</div>
-      </div>
-
-      <!-- Track 5 -->
-      <div class="track" id="track-5">
-        <img src="assets/svg/track-bg.svg" alt="" class="track-bg" />
-        <div class="top-row">
-          <img src="assets/svg/insert-button.svg" class="insert-btn" alt="Insert" />
-          <div class="led" id="led-5"></div>
-        </div>
-        <div class="knob-row">
-          <img src="assets/svg/knob-send.svg" class="knob send" alt="Send" />
-          <img src="assets/svg/knob-gain.svg" class="knob gain" alt="Gain" />
-          <img src="assets/svg/knob-pan.svg"  class="knob pan"  alt="Pan" />
-        </div>
-        <div class="button-row">
-          <button class="btn solo" id="solo-5" aria-pressed="false">S</button>
-          <button class="btn mute" id="mute-5" aria-pressed="false">M</button>
-          <img src="assets/svg/button-headphone.svg" class="btn monitor" alt="Monitor" />
-        </div>
-        <div class="meter-wrap">
-          <div class="meter" id="meter-5"><div class="meter-fill"></div></div>
-          <div class="db-display" id="db-5">0 dB</div>
-        </div>
-        <div class="fader">
-          <img src="assets/svg/fader-track.svg" class="fader-track" alt="" />
-          <input type="range" class="fader-input" id="fader-5" orient="vertical" min="0" max="100" value="62" />
-        </div>
-        <div class="track-label" contenteditable="true">Keys</div>
-      </div>
-
-      <!-- Track 6 -->
-      <div class="track" id="track-6">
-        <img src="assets/svg/track-bg.svg" alt="" class="track-bg" />
-        <div class="top-row">
-          <img src="assets/svg/insert-button.svg" class="insert-btn" alt="Insert" />
-          <div class="led" id="led-6"></div>
-        </div>
-        <div class="knob-row">
-          <img src="assets/svg/knob-send.svg" class="knob send" alt="Send" />
-          <img src="assets/svg/knob-gain.svg" class="knob gain" alt="Gain" />
-          <img src="assets/svg/knob-pan.svg"  class="knob pan"  alt="Pan" />
-        </div>
-        <div class="button-row">
-          <button class="btn solo" id="solo-6" aria-pressed="false">S</button>
-          <button class="btn mute" id="mute-6" aria-pressed="false">M</button>
-          <img src="assets/svg/button-headphone.svg" class="btn monitor" alt="Monitor" />
-        </div>
-        <div class="meter-wrap">
-          <div class="meter" id="meter-6"><div class="meter-fill"></div></div>
-          <div class="db-display" id="db-6">0 dB</div>
-        </div>
-        <div class="fader">
-          <img src="assets/svg/fader-track.svg" class="fader-track" alt="" />
-          <input type="range" class="fader-input" id="fader-6" orient="vertical" min="0" max="100" value="64" />
-        </div>
-        <div class="track-label" contenteditable="true">Pad</div>
-      </div>
-
-      <!-- Track 7 -->
-      <div class="track" id="track-7">
-        <img src="assets/svg/track-bg.svg" alt="" class="track-bg" />
-        <div class="top-row">
-          <img src="assets/svg/insert-button.svg" class="insert-btn" alt="Insert" />
-          <div class="led" id="led-7"></div>
-        </div>
-        <div class="knob-row">
-          <img src="assets/svg/knob-send.svg" class="knob send" alt="Send" />
-          <img src="assets/svg/knob-gain.svg" class="knob gain" alt="Gain" />
-          <img src="assets/svg/knob-pan.svg"  class="knob pan"  alt="Pan" />
-        </div>
-        <div class="button-row">
-          <button class="btn solo" id="solo-7" aria-pressed="false">S</button>
-          <button class="btn mute" id="mute-7" aria-pressed="false">M</button>
-          <img src="assets/svg/button-headphone.svg" class="btn monitor" alt="Monitor" />
-        </div>
-        <div class="meter-wrap">
-          <div class="meter" id="meter-7"><div class="meter-fill"></div></div>
-          <div class="db-display" id="db-7">0 dB</div>
-        </div>
-        <div class="fader">
-          <img src="assets/svg/fader-track.svg" class="fader-track" alt="" />
-          <input type="range" class="fader-input" id="fader-7" orient="vertical" min="0" max="100" value="58" />
-        </div>
-        <div class="track-label" contenteditable="true">Vocal</div>
-      </div>
-
-      <!-- Track 8 -->
-      <div class="track" id="track-8">
-        <img src="assets/svg/track-bg.svg" alt="" class="track-bg" />
-        <div class="top-row">
-          <img src="assets/svg/insert-button.svg" class="insert-btn" alt="Insert" />
-          <div class="led" id="led-8"></div>
-        </div>
-        <div class="knob-row">
-          <img src="assets/svg/knob-send.svg" class="knob send" alt="Send" />
-          <img src="assets/svg/knob-gain.svg" class="knob gain" alt="Gain" />
-          <img src="assets/svg/knob-pan.svg"  class="knob pan"  alt="Pan" />
-        </div>
-        <div class="button-row">
-          <button class="btn solo" id="solo-8" aria-pressed="false">S</button>
-          <button class="btn mute" id="mute-8" aria-pressed="false">M</button>
-          <img src="assets/svg/button-headphone.svg" class="btn monitor" alt="Monitor" />
-        </div>
-        <div class="meter-wrap">
-          <div class="meter" id="meter-8"><div class="meter-fill"></div></div>
-          <div class="db-display" id="db-8">0 dB</div>
-        </div>
-        <div class="fader">
-          <img src="assets/svg/fader-track.svg" class="fader-track" alt="" />
-          <input type="range" class="fader-input" id="fader-8" orient="vertical" min="0" max="100" value="52" />
-        </div>
-        <div class="track-label" contenteditable="true">Guitar</div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- 🔹 Bottom Panel: Transport -->
-  <section id="transport">
-    <h3>Transport Controls</h3>
-    <canvas id="waveform" width="600" height="100"></canvas>
-    <div>
-      <button onclick="play()">▶️ Play</button>
-      <button onclick="pause()">⏸️ Pause</button>
-      <button onclick="stop()">⏹️ Stop</button>
-    </div>
-  </section>
+    </section>
+  </main>
 </body>
 </html>
+
+
