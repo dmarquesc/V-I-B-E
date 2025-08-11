@@ -1,0 +1,24 @@
+{
+  "name": "v-i-b-e",
+  "version": "1.0.0",
+  "description": "Welcome to the futuristic browser-based DAW (Digital Audio Workstation) powered by V.I.B.E., your AI music assistant. Follow the steps below to get your environment fully running with all advanced features.",
+  "main": "audioEngine.js",
+  "scripts": {
+    "start": "lite-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dmarquesc/V-I-B-E.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dmarquesc/V-I-B-E/issues"
+  },
+  "homepage": "https://github.com/dmarquesc/V-I-B-E#readme",
+  "dependencies": {
+    "firebase": "^12.0.0",
+    "lite-server": "^2.6.1"
+  }
+}
